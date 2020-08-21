@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./index.css";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from "react-router-dom";
+import { Resume, Home, Landing, SignIn, SignUp, ROUTES } from "./pages";
+import { withFirebase, withAuthentication } from "./components/firebase";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App({ firebase }) {
+    const isLoggedIn = firebase.getUserId();
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route exact path={ROUTES.LANDING} component={Landing}>
+                        {isLoggedIn && <Redirect from="/" to={ROUTES.HOME} />}
+                    </Route>
+                    <Route path={ROUTES.SIGNIN} component={SignIn} />
+                    <Route path={ROUTES.SIGNUP} component={SignUp} />
+                    <Route path={ROUTES.HOME} component={Home} />
+                    <Route path={ROUTES.RESUME} component={Resume} />
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
-export default App;
+export default withAuthentication(withFirebase(App));
