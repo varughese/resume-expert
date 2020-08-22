@@ -41,41 +41,47 @@ class SignInBase extends React.Component {
         const isInvalid = password === "" || email === "";
 
         return (
-            <div>
-                <h2>Sign in</h2>
-                <form onSubmit={this.onSubmit}>
-                    <div>
-                        <input
-                            name="email"
-                            value={email}
-                            onChange={this.onChange}
-                            type="text"
-                            placeholder="Email Address"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            name="password"
-                            value={password}
-                            onChange={this.onChange}
-                            type="password"
-                            placeholder="Password"
-                        />
-                    </div>
-                    <div>
-                        <div>
-                            <button disabled={isInvalid}>Sign In</button>
+            <div className="center">
+                <div>
+                    <h2>Sign in</h2>
+                    <form className="box" onSubmit={this.onSubmit}>
+                        <div className="form-group">
+                            <label>Email Address</label>
+                            <input
+                                name="email"
+                                value={email}
+                                onChange={this.onChange}
+                                type="text"
+                                placeholder="Email Address"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input
+                                name="password"
+                                value={password}
+                                onChange={this.onChange}
+                                type="password"
+                                placeholder="Password"
+                            />
                         </div>
                         <div>
-                            <p className="text-right">
-                                Don't have an account? Sign up{" "}
-                                <Link to={ROUTES.SIGNUP}>here.</Link>
-                            </p>
+                            <div>
+                                <button className="btn" disabled={isInvalid}>
+                                    Sign In
+                                </button>
+                            </div>
+                            <div>
+                                <p className="text-right">
+                                    Don't have an account? Sign up{" "}
+                                    <Link to={ROUTES.SIGNUP}>here.</Link>
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    {error && <p>{error.message}</p>}
-                </form>
+                        {error && <p className="error">{error.message}</p>}
+                    </form>
+                </div>
             </div>
         );
     }

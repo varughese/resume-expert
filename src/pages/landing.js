@@ -9,26 +9,44 @@ const LandingBase = () => {
         <span>{acceptedFiles[0].path}</span>
     ) : null;
     return (
-        <div>
-            <h1>Landing</h1>
-            <p>Get your resume reviewed!</p>
-            <div className="dropzone" {...getRootProps()}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
+        <div className="container mt">
+            <h1>Resume Expert</h1>
+            <div className="box">
+                <div className="dropzone" {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <div>
+                        <ol>
+                            <li>
+                                Drag your resume here (or click to upload it)
+                            </li>
+                            <li>Get a custom link to send to a reviewer</li>
+                            <li>
+                                Your reviewer can easily leave comments, and
+                                then you can land your dream job
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                {fileInfo && (
+                    <div>
+                        <p>
+                            Uploaded <code>{fileInfo}</code>
+                        </p>
+                        <Link
+                            className="btn"
+                            to={{
+                                pathname: ROUTES.SIGNUP,
+                                data: acceptedFiles[0],
+                            }}
+                        >
+                            Get it reviewed
+                        </Link>
+                    </div>
+                )}
             </div>
-            <p>{fileInfo}</p>
-            {fileInfo && (
-                <Link
-                    to={{
-                        pathname: ROUTES.SIGNUP,
-                        data: acceptedFiles[0],
-                    }}
-                >
-                    Get it reviewed
-                </Link>
-            )}
-            <div>Click here to upload or drag here</div>
-            <Link to="/signin">Sign in</Link>
+            <p className="gray">
+                Already have an account? <Link to="/signin">Sign in</Link>
+            </p>
         </div>
     );
 };

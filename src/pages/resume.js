@@ -41,7 +41,7 @@ const ResumeBase = ({ firebase, match }) => {
 
     return (
         <div className="flex vh100">
-            <div className="sidebar vh100" style={{ width: "25vw" }}>
+            <div className="resume-sidebar vh100" style={{ width: "25vw" }}>
                 <Link to={ROUTES.HOME}>Home</Link>
                 <HighlightsListing
                     highlights={highlights}

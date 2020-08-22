@@ -75,7 +75,7 @@ class Firebase {
         const resumeId = uuid();
         const snapshot = await this.pdfblob_ref().child(resumeId).put(file);
         const url = await snapshot.ref.getDownloadURL();
-        const update = { [resumeId]: url };
+        const update = { [resumeId]: new Date() };
         const userId = this.getUserId();
         this.user_ref().set(
             {
@@ -103,6 +103,20 @@ class Firebase {
         resumes[resumeId] = url;
         localStorage.setItem("resumeUrls", JSON.stringify(resumes));
         return url;
+    };
+
+    deleteResume = async (resumeId) => {
+        const pdfRef = this.pdfblob_ref().child(resumeId);
+        await pdfRef.delete();
+        await this.resume_ref(resumeId).delete();
+        this.user_ref().set(
+            {
+                resumes: {
+                    [resumeId]: false,
+                },
+            },
+            { merge: true }
+        );
     };
 
     setResumeHighlights = async (resumeId, highlights) => {

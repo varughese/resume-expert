@@ -8,7 +8,7 @@ const updateHash = (highlight) => {
 
 function HighlightsListing({ highlights, resetHighlights }) {
     return (
-        <div className="sidebar vh100" style={{ width: "25vw" }}>
+        <div>
             <div className="description" style={{ padding: "1rem" }}>
                 <p>
                     <small>
@@ -48,15 +48,14 @@ function HighlightsListing({ highlights, resetHighlights }) {
                                 </div>
                             ) : null}
                         </div>
-                        <div className="highlight__location">
-                            Page {highlight.position.pageNumber}
-                        </div>
                     </li>
                 ))}
             </ul>
             {highlights.length > 0 ? (
                 <div style={{ padding: "1rem" }}>
-                    <button onClick={resetHighlights}>Reset highlights</button>
+                    <button className="btn" onClick={resetHighlights}>
+                        Reset highlights
+                    </button>
                 </div>
             ) : null}
         </div>

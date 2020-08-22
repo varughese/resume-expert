@@ -20,7 +20,9 @@ function App({ firebase }) {
                     </Route>
                     <Route path={ROUTES.SIGNIN} component={SignIn} />
                     <Route path={ROUTES.SIGNUP} component={SignUp} />
-                    <Route path={ROUTES.HOME} component={Home} />
+                    {isLoggedIn && (
+                        <Route path={ROUTES.HOME} component={Home} />
+                    )}
                     <Route path={ROUTES.RESUME} component={Resume} />
                 </Switch>
             </div>

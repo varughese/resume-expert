@@ -1,7 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { withFirebase } from "../components/firebase";
 import Dropzone from "react-dropzone";
-import { Document, Page } from "react-pdf";
 import * as ROUTES from "./routes";
 
 class SignUpBase extends React.Component {
@@ -15,6 +15,7 @@ class SignUpBase extends React.Component {
             password: "",
             firstname: "",
             resume: data,
+            loading: false,
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,6 +23,7 @@ class SignUpBase extends React.Component {
 
     async handleSubmit(event) {
         event.preventDefault();
+        this.setState({ loading: true });
         try {
             await this.props.firebase.createUserWithEmailAndPassword(
                 this.state.email,
@@ -31,6 +33,7 @@ class SignUpBase extends React.Component {
                 email: this.state.email,
                 username: this.state.username,
             });
+            await this.props.firebase.uploadResume(this.state.resume);
             this.props.history.push(ROUTES.LANDING);
         } catch (e) {
             this.setState({
@@ -49,60 +52,76 @@ class SignUpBase extends React.Component {
 
     render() {
         const hasResume = this.state.resume;
-        const resumeJsx = hasResume ? (
+        const resumeJsx = (
             <div>
-                <Document className="pdfminiviewer" file={this.state.resume}>
-                    <Page width="300" pageNumber={1} />
-                </Document>
-                <p>{this.state.resume.path}</p>
-            </div>
-        ) : (
-            <Dropzone
-                onDrop={(acceptedFiles) =>
-                    this.setState({ resume: acceptedFiles[0] })
-                }
-            >
-                {({ getRootProps, getInputProps }) => (
-                    <section>
-                        <div {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <p>Drag or click to upload resume.</p>
-                        </div>
-                    </section>
+                {hasResume && (
+                    <div>
+                        <code>{this.state.resume.path}</code>
+                    </div>
                 )}
-            </Dropzone>
+                <Dropzone
+                    onDrop={(acceptedFiles) =>
+                        this.setState({ resume: acceptedFiles[0] })
+                    }
+                >
+                    {({ getRootProps, getInputProps }) => (
+                        <section className="mt dropzone">
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <p>
+                                    Drag or click to{" "}
+                                    {hasResume ? "replace" : "upload"} resume.
+                                </p>
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+            </div>
         );
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <label>Username</label>
-                        <input
-                            onChange={(e) => this.handleChange(e)}
-                            name="username"
-                        ></input>
-                    </div>
-                    <div>
-                        <label>Email</label>
-                        <input
-                            onChange={(e) => this.handleChange(e)}
-                            name="email"
-                            placeholder="john@gmail.com"
-                        ></input>
-                    </div>
-                    <div>
-                        <label>Password</label>
-                        <input
-                            onChange={(e) => this.handleChange(e)}
-                            type="password"
-                            name="password"
-                        ></input>
-                    </div>
-                    <div>{resumeJsx}</div>
-                    <button type="submit">Sign Up!</button>
-                    <p>{this.state.errorMessage}</p>
-                    <div>{this.state.error}</div>
-                </form>
+            <div className="center">
+                <div>
+                    <h2>Sign up!</h2>
+                    <form className="box" onSubmit={this.handleSubmit}>
+                        {this.state.loading && "Loading ... "}
+                        <div className="form-group">
+                            <label>Username</label>
+                            <input
+                                onChange={(e) => this.handleChange(e)}
+                                name="username"
+                            ></input>
+                        </div>
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input
+                                onChange={(e) => this.handleChange(e)}
+                                name="email"
+                                placeholder="john@gmail.com"
+                            ></input>
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input
+                                onChange={(e) => this.handleChange(e)}
+                                type="password"
+                                name="password"
+                            ></input>
+                        </div>
+                        <div className="form-group">
+                            <label>Resume</label>
+                            <div>{resumeJsx}</div>
+                        </div>
+                        <button className="btn" type="submit">
+                            Sign Up!
+                        </button>
+                        <p className="error">{this.state.errorMessage}</p>
+                        <div>{this.state.error}</div>
+                    </form>
+                    <p className="gray">
+                        Already have an account?{" "}
+                        <Link to="/signin">Sign in</Link>
+                    </p>
+                </div>
             </div>
         );
     }
